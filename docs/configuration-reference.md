@@ -37,6 +37,12 @@ The `.env.example` file contains the base configuration. The bot uses strict env
 - `NOTIFY_CATEGORIES` (along with aliases `NOTIFICATION_CATEGORIES`, `NOTIFY_EVENT_CATEGORIES`, `EVENT_CATEGORIES`, and `CLAIM_CATEGORIES`): Optional allowlist restricting `mimir-market` `claim_created` notifications by category.
 - For full details on defaults, evaluation precedence, and worked examples, see [Notification Filters](notification-filters.md).
 
+### Dead-Letter Queue Capacity Gauge
+The dead-letter queue (DLQ) capacity gauge reports how full the failed-notification queue is, as a bounded value. It exposes only counts: `used` (current entries) and `max` (configured maximum entries). Message bodies, chat IDs and payload contents are never included.
+- **Output**: `dead_letter_capacity_used` and `dead_letter_capacity_max` gauges, plus a derived `dead_letter_capacity_utilization` ratio in the range `0`–`1` (`used / max`, clamped to `1`).
+- **Queue disabled**: When the dead-letter queue is disabled, `max` reports `0`, `used` reports `0`, and utilization reports `0`. The gauges are still registered so dashboards do not break; no entries are ever recorded and no alert should fire on them.
+- **Zero-capacity guard**: If `max` is `0` while the queue is enabled, utilization is reported as `0` rather than dividing by zero.
+
 ### Health Reporting
 - `HEALTH_HOST` & `HEALTH_PORT`: Binds a local HTTP endpoint for health probes (e.g., Kubernetes liveness probes). Set port to 0 to disable.
 - `HEALTH_STALE_MS`: Marks the health endpoint as degraded if no successful poll completes within this window (e.g., 90000ms).

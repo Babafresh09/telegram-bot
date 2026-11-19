@@ -195,6 +195,14 @@ export function createMetrics(): MetricsRegistry {
     `${METRICS_PREFIX}activity_anomalies_total`,
     "Complete poll cycles classified as a spike or drop against the rolling activity baseline.",
   );
+  const deadLetterEntries = makeGauge(
+    `${METRICS_PREFIX}dead_letter_entries`,
+    "Entries currently held in the dead-letter queue (0 when the queue is disabled).",
+  );
+  const deadLetterCapacity = makeGauge(
+    `${METRICS_PREFIX}dead_letter_capacity`,
+    "Maximum entries the dead-letter queue can hold (0 when the queue is disabled).",
+  );
 
   const counters = [
     pollCycles,
@@ -207,7 +215,7 @@ export function createMetrics(): MetricsRegistry {
     staleCursorEvents,
     activityAnomalies,
   ];
-  const gauges = [consecutiveFailures, lastCycleEvents, activityBaselineEvents];
+  const gauges = [consecutiveFailures, lastCycleEvents, activityBaselineEvents, deadLetterEntries, deadLetterCapacity];
 
   function render(): string {
     const lines: string[] = [];
