@@ -1,4 +1,5 @@
 import { open, mkdir, readdir, unlink, chmod } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { scanJsonReplacer } from "./events.js";
 import type { DecodedEvent } from "./decode.js";
