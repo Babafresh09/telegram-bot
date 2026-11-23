@@ -78,6 +78,8 @@ export interface GenericEventPayload {
 }
 
 export interface GenericDecodedEvent {
+  /** Optional archive record schema version, present on archived/migrated records. */
+  schemaVersion?: number;
   source: string;
   contractId: string;
   ledger: number;
@@ -881,9 +883,4 @@ export function decodeGenericEvent(
   };
 }
 
-export {
-  DECODER_FINGERPRINT_VERSION,
-  fingerprintGenericEvent,
-  fingerprintDecoderOutput,
-  type SemanticFingerprint,
-} from "./decoder-fingerprint.js";
+export { adaptArchivedGenericEvent } from "./archive.js";
